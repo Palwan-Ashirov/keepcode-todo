@@ -1,9 +1,14 @@
-<script setup lang="ts"></script>
-
 <template>
   <div></div>
+  <div class="toast">
+    <div class="toast__wrapper">
+      <span id="toast"></span>
+    </div>
+  </div>
 </template>
 
-<style lang="scss" scoped>
-  @import '@/assets/scss/main';
+<script setup lang="ts"></script>
+
+<style lang="scss">
+  @import '@/assets/scss/index';
 </style>

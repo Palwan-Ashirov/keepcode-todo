@@ -1,0 +1,160 @@
+.toast {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  width: 0;
+  height: 0;
+}
+
+.toast__wrapper {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.toast__item {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  width: 320px;
+  height: auto;
+  padding: 10px 12px 18px 20px;
+  margin-top: 9px;
+  margin-left: auto;
+  background: $toast-bg;
+  animation: move_item 0.3s linear;
+}
+
+.toast__icon {
+  padding-top: 10px;
+  padding-right: 10px;
+}
+
+.toast__icon span {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 30px;
+  height: 30px;
+}
+
+.toast__text {
+  padding-top: 9px;
+  padding-right: 10px;
+  color: $white !important;
+}
+
+.toast__close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  color: $gray-dark;
+  cursor: pointer;
+}
+
+@keyframes move_item {
+  0% {
+    transform: translateX(320px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+@media screen and (max-width: 640px) {
+  .toast {
+    top: 0;
+    right: unset;
+    bottom: unset;
+    left: 0;
+  }
+  .toast__wrapper {
+    top: 5px;
+    right: unset;
+    bottom: unset;
+    left: 5px;
+  }
+
+  .toast__item {
+    width: calc(100vw - 10px);
+    height: 50px;
+    padding: 10px;
+    margin-top: unset;
+    margin-right: auto;
+    margin-bottom: 9px;
+    margin-bottom: 5px;
+    margin-left: auto;
+  }
+
+  .toast__icon {
+    padding-top: 0;
+  }
+
+  .toast__icon span {
+    width: 24px;
+    height: 24px;
+  }
+  .toast__text {
+    padding: 0;
+  }
+}
+
+.pwa-toast {
+  &-item {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: column;
+    width: 420px;
+    height: auto;
+    padding: 30px 35px 42px 30px;
+    margin-top: 10px;
+    background: $toast-bg;
+    @media screen and (max-width: 640px) {
+      width: calc(100vw - 10px);
+      padding: 10px;
+      margin-top: unset;
+      margin-right: auto;
+      margin-bottom: 5px;
+      margin-left: auto;
+    }
+  }
+  &-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: $gray-dark;
+    @media screen and (max-width: 480px) {
+      top: 10px;
+      right: 10px;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &-title {
+    font-weight: 500;
+    color: $white;
+    &.pwa-prompt {
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+  }
+  &-text {
+    margin: 20px 0;
+    line-height: 18px;
+    color: $white;
+  }
+  &-buttons {
+    display: flex;
+    gap: 20px;
+  }
+}

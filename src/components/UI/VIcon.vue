@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-  import { iconAttributes, icons } from '@/utils/icons/'
+  import { iconAttributes, icons } from '@/utils/icons'
   import { computed } from 'vue'
 
   interface Props {
