@@ -14,5 +14,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '@use': path.resolve(__dirname, './src/composables')
     }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@use "@/assets/scss/_variables.scss" as *;'
+      }
+    }
   }
 })
