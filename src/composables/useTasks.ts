@@ -47,6 +47,7 @@ export function useTasks(newTask) {
       filterCategories[key].state = false
     }
     filter.state = true
+    currentPage.value = 1
   }
 
   const filteredTaskList = computed(() => {
@@ -87,6 +88,9 @@ export function useTasks(newTask) {
   const maxPage = computed(() => Math.ceil(filteredTaskList.value?.length / 10))
 
   function updateCurrentPage(page) {
+    if (page < 1 || page > maxPage.value) {
+      return
+    }
     currentPage.value = page
   }
 

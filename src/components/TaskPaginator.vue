@@ -1,6 +1,6 @@
 <template>
   <div class="paginator">
-    <button class="button button__paginator button__prev">
+    <button class="button button__paginator button__prev" @click="$emit('update:currentPage', currentPage - 1)">
       <VIcon name="arrow-left" width="20" height="20" view-box="0 0 20 20" />
     </button>
     <div class="paginator__list">
@@ -30,7 +30,7 @@
         {{ maxPage }}
       </button>
     </div>
-    <button class="button button__paginator button__next">
+    <button class="button button__paginator button__next" @click="$emit('update:currentPage', currentPage + 1)">
       <VIcon name="arrow-right" width="20" height="20" view-box="0 0 20 20" />
     </button>
   </div>
