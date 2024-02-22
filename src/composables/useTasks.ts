@@ -2,14 +2,18 @@ import { ref, reactive, computed } from 'vue'
 import { getTasks } from '@/api/tasks'
 
 export function useTasks(newTask) {
+  const taskList = ref([])
+
   async function init() {
     try {
       const { data } = await getTasks()
       taskList.value = data.map((task) => ({ ...task, edit: false }))
     } catch (error) {
-      console.log(error)
+      console.error(error)
+      // TODO: Display a user-friendly error message in the UI
     }
   }
+
   function createNewTask() {
     if (newTask.value.trim() === '') {
       return
@@ -44,8 +48,6 @@ export function useTasks(newTask) {
     filter.state = true
   }
 
-  const taskList = ref([])
-
   const filteredTaskList = computed(() => {
     if (filterCategories.all.state) {
       return taskList.value
@@ -57,27 +59,33 @@ export function useTasks(newTask) {
       return taskList.value.filter((task) => !task.completed)
     }
   })
-  function editTask(id: number) {
-    const task = taskList.value.find((task) => task.id === id)
+
+  function findTaskById(id) {
+    return taskList.value.find((task) => task.id === id)
+  }
+
+  function editTask(id) {
+    const task = findTaskById(id)
     task.edit = true
   }
 
-  function saveTask(id: number) {
-    const task = taskList.value.find((task) => task.id === id)
+  function saveTask(id) {
+    const task = findTaskById(id)
     task.edit = false
   }
 
-  function deleteTask(id: number) {
+  function deleteTask(id) {
     const taskIndex = taskList.value.findIndex((task) => task.id === id)
     taskList.value.splice(taskIndex, 1)
     if (currentPage.value > maxPage.value) {
       currentPage.value = maxPage.value
     }
   }
-  const currentPage = ref<number>(1)
+
+  const currentPage = ref(1)
   const maxPage = computed(() => Math.ceil(filteredTaskList.value?.length / 10))
 
-  function updateCurrentPage(page: number) {
+  function updateCurrentPage(page) {
     currentPage.value = page
   }
 
@@ -86,6 +94,7 @@ export function useTasks(newTask) {
     const end = start + 10
     return filteredTaskList.value.slice(start, end)
   })
+
   return {
     taskList,
     filteredTaskList,
