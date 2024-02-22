@@ -7,6 +7,7 @@ export function useTasks(newTask) {
   async function init() {
     try {
       const { data } = await getTasks()
+
       taskList.value = data.map((task) => ({ ...task, edit: false }))
     } catch (error) {
       console.error(error)
@@ -18,7 +19,7 @@ export function useTasks(newTask) {
     if (newTask.value.trim() === '') {
       return
     }
-    taskList.value.push({
+    taskList.value.unshift({
       id: taskList.value.length + 1,
       title: newTask.value,
       completed: false,

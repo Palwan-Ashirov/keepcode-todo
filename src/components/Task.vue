@@ -1,13 +1,13 @@
 <template>
   <div class="task__wrapper">
     <VCheckbox v-model="task.completed">
-      <VInput v-model="task.title" :readonly="!task.edit" />
+      <VInput v-model="task.title" :readonly="!task.edit" ref="$input" />
     </VCheckbox>
     <div class="task__controllers">
       <button class="task__controller save" v-if="task.edit" @click="$emit('save', task.id)">
         <VIcon name="save" />
       </button>
-      <button class="task__controller edit" v-else @click="$emit('edit', task.id)">
+      <button class="task__controller edit" v-else @click="editTask(task.id)">
         <VIcon name="edit" />
       </button>
       <button class="task__controller delete" @click="$emit('delete', task.id)">
@@ -18,23 +18,28 @@
 </template>
 
 <script setup lang="ts">
+  import { ref } from 'vue'
+  import { ITask } from '@types'
   import VCheckbox from './UI/VCheckbox.vue'
   import VInput from '@/components/UI/VInput.vue'
   import VIcon from './UI/VIcon.vue'
-
-  interface ITask {
-    id: number
-    title: string
-    completed: boolean
-    edit: boolean
-  }
 
   interface Props {
     task: ITask
   }
 
   withDefaults(defineProps<Props>(), {})
-  defineEmits(['completed', 'save', 'edit', 'delete'])
+  const emit = defineEmits(['completed', 'save', 'edit', 'delete'])
+
+  function editTask(id: number) {
+    emit('edit', id)
+    focusInput()
+  }
+
+  const $input = ref(null)
+  function focusInput() {
+    $input.value.focusInput()
+  }
 </script>
 
 <style lang="scss" scoped>

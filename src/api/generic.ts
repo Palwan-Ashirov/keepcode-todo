@@ -1,19 +1,30 @@
 import axios from 'axios'
 
-const baseURL = import.meta.env.VITE_BASE_URL
-
-export const requestApi = async ({ url, method = 'get', headers = {}, params = {}, data = {}, web = false }) => {
+export const requestApi = ({
+  url,
+  method = 'get',
+  headers = {},
+  params = {},
+  data = {},
+  web = false
+}): Promise<any> => {
   const baseURL = !web ? import.meta.env.VITE_BASE_URL : import.meta.env.VITE_FINTERIA_API
 
-  const response = await axios({
-    url: `${baseURL}${url}`,
-    method,
-    headers: {
-      ...headers
-    },
-    params,
-    data
+  return new Promise((resolve, reject) => {
+    axios({
+      url: `${baseURL}${url}`,
+      method,
+      headers: {
+        ...headers
+      },
+      params,
+      data
+    })
+      .then((response) => {
+        resolve(response)
+      })
+      .catch((error) => {
+        reject(error)
+      })
   })
-
-  return response
 }

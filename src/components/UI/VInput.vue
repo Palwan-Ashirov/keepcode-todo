@@ -1,6 +1,7 @@
 <template>
   <div class="input-textarea flex flex-column">
     <input
+      ref="$input"
       :id="label"
       :placeholder="placeholder"
       :value="modelValue"
@@ -9,11 +10,13 @@
       :inputmode="inputmode"
       :maxlength="maxlength"
       :readonly="readonly"
+      @keypress.enter="$emit('enterClicked')"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+  import { ref } from 'vue'
   interface Props {
     type?: string
     modelValue: number | string | null
@@ -38,12 +41,18 @@
 
   const emit = defineEmits<{
     'update:modelValue': [value: string | number]
+    enterClicked: []
   }>()
 
   function updateValue(event) {
     const { value }: { value: string | number } = event.target
     emit('update:modelValue', value)
   }
+  const $input = ref(null)
+  function focusInput() {
+    $input.value.focus()
+  }
+  defineExpose({ focusInput })
 </script>
 
 <style lang="scss" scoped>

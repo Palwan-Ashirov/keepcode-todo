@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="task-title">Todo board</h1>
     <div class="new-task__wrapper">
-      <VInput v-model.trim="newTask" placeholder="Add new task" inputmode="text" />
+      <VInput v-model.trim="newTask" placeholder="Add new task" inputmode="text" @enter-clicked="createNewTask" />
       <VButton @click="createNewTask">Add</VButton>
     </div>
     <div class="filter__wrapper">
@@ -86,6 +86,7 @@
     align-items: center;
     gap: 20px;
     margin-bottom: 20px;
+    max-width: 768px;
   }
 
   .filter__wrapper {
