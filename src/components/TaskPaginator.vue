@@ -4,7 +4,12 @@
       <VIcon name="arrow-left" width="20" height="20" view-box="0 0 20 20" />
     </button>
     <div class="paginator__list">
-      <button class="button button__paginator button_paginator-item" :class="{ active: currentPage == 1 }">1</button
+      <button
+        class="button button__paginator button_paginator-item"
+        :class="{ active: currentPage == 1 }"
+        @click="$emit('update:currentPage', 1)"
+      >
+        1</button
       ><button class="button button__paginator button_paginator-item not-allowed" v-if="hasDifferenceBetweenFirstPage">
         ...</button
       ><button
@@ -12,11 +17,16 @@
         v-for="page in currentPageRange"
         :key="page"
         :class="{ active: currentPage == page }"
+        @click="$emit('update:currentPage', page)"
       >
         {{ page }}</button
       ><button class="button button__paginator button_paginator-item not-allowed" v-if="hasDifferenceBetweenLastPage">
         ...</button
-      ><button class="button button__paginator button_paginator-item" :class="{ active: currentPage == maxPage }">
+      ><button
+        class="button button__paginator button_paginator-item"
+        :class="{ active: currentPage == maxPage }"
+        @click="$emit('update:currentPage', maxPage)"
+      >
         {{ maxPage }}
       </button>
     </div>
@@ -40,6 +50,7 @@
       currentPage: 8
     }
   )
+  defineEmits(['update:currentPage'])
 
   const DIFFERENCE_SHOW_PAGES = 2
 

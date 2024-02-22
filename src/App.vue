@@ -2,8 +2,8 @@
   <div class="container">
     <h1 class="task-title">Todo board</h1>
     <div class="new-task__wrapper">
-      <VInput v-model="newTask" placeholder="Add new task" inputmode="text" />
-      <VButton>Add</VButton>
+      <VInput v-model.trim="newTask" placeholder="Add new task" inputmode="text" />
+      <VButton @click="createNewTask">Add</VButton>
     </div>
     <div class="filter__wrapper">
       <VTab
@@ -16,7 +16,7 @@
     </div>
     <div class="task__list">
       <Task
-        v-for="task in filteredTaskList"
+        v-for="task in splicedTaskList"
         :key="task.id"
         :task="task"
         @edit="editTask"
@@ -24,7 +24,12 @@
         @delete="deleteTask"
       />
     </div>
-    <TaskPaginator />
+    <TaskPaginator
+      :current-page="currentPage"
+      :max-page="maxPage"
+      v-if="filteredTaskList?.length"
+      @update:current-page="updateCurrentPage"
+    />
   </div>
   <div class="toast">
     <div class="toast__wrapper">
@@ -34,7 +39,9 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive, computed } from 'vue'
+  import { ref, reactive, computed, onMounted } from 'vue'
+  import { getTasks } from './api/tasks'
+
   import VInput from '@/components/UI/VInput.vue'
   import VButton from './components/UI/VButton.vue'
   import VTab from './components/UI/VTab.vue'
@@ -42,6 +49,19 @@
   import TaskPaginator from './components/TaskPaginator.vue'
 
   const newTask = ref<string>('')
+
+  function createNewTask() {
+    if (newTask.value.trim() === '') {
+      return
+    }
+    taskList.value.push({
+      id: taskList.value.length + 1,
+      title: newTask.value,
+      completed: false,
+      edit: false
+    })
+    newTask.value = ''
+  }
   const filterCategories = reactive({
     all: {
       codeName: 'Все',
@@ -64,26 +84,7 @@
     filter.state = true
   }
 
-  const taskList = ref([
-    {
-      id: 1,
-      title: 'Сделать домашку',
-      edit: false,
-      completed: false
-    },
-    {
-      id: 2,
-      title: 'Погулять с собакой',
-      edit: false,
-      completed: true
-    },
-    {
-      id: 3,
-      title: 'Помыть машину',
-      edit: false,
-      completed: false
-    }
-  ])
+  const taskList = ref([])
 
   const filteredTaskList = computed(() => {
     if (filterCategories.all.state) {
@@ -96,7 +97,6 @@
       return taskList.value.filter((task) => !task.completed)
     }
   })
-
   function editTask(id: number) {
     const task = taskList.value.find((task) => task.id === id)
     task.edit = true
@@ -110,6 +110,37 @@
   function deleteTask(id: number) {
     const taskIndex = taskList.value.findIndex((task) => task.id === id)
     taskList.value.splice(taskIndex, 1)
+    if (currentPage.value > maxPage.value) {
+      currentPage.value = maxPage.value
+    }
+  }
+  const currentPage = ref<number>(1)
+  const maxPage = computed(() => Math.ceil(filteredTaskList.value?.length / 10))
+
+  function updateCurrentPage(page: number) {
+    currentPage.value = page
+  }
+
+  const splicedTaskList = computed(() => {
+    const start = (currentPage.value - 1) * 10
+    const end = start + 10
+    return filteredTaskList.value.slice(start, end)
+  })
+
+  onMounted(async () => {
+    await init()
+  })
+  const isLoader = ref<boolean>(false)
+  async function init() {
+    try {
+      isLoader.value = true
+      const { data } = await getTasks()
+      taskList.value = data.map((task) => ({ ...task, edit: false }))
+    } catch (error) {
+      console.log(error)
+    } finally {
+      isLoader.value = false
+    }
   }
 </script>
 
